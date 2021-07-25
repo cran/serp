@@ -137,8 +137,6 @@ depending on the type of slope modeled. Other summary methods include:
   \item{Terms}{the terms structure describing the model.}
   \item{testError}{numeric value of the cross-validated test error at which
         the optimal tuning parameter emerged.}
-  \item{trainError}{numeric value of the cross-validated training error of
-        the final model.}
   \item{tuneMethod}{a character vector specifying the method for choosing an
         optimal shrinkage parameter.}
   \item{value}{numeric value of the deviance or the minus log-likelihood of
@@ -201,7 +199,8 @@ vary smoothly over the categories, the following penalty
 enables the smoothing of response categories such that all
 category-specific effects associated with the response turn towards a
 common global effect. SERP could also be applied to a semi-parallel model
-with only the category-specific part of the model penalized.
+with only the category-specific part of the model penalized. See,
+Ugba et al. (2021) for a detailed discussion on SERP.
 }
 \examples{
 
@@ -217,7 +216,6 @@ f2 <- serp(rating ~ temp + contact, slope = "penalize",
            lambdaGrid = 10^seq(1, -1, length.out=5), data = wine)
 coef(f2)
 predict(f2, type = "class")
-anova(f1, f2)
 
 ## The unpenalized proportional odds model (with constrained estimates).
 f3 <-  serp(rating ~ temp + contact, slope = "parallel",
@@ -228,13 +226,18 @@ errorMetrics(f3)
 
 }
 \references{
-McCullagh, P (1980). Regression Models for Ordinal Data.
+McCullagh, P. (1980). Regression Models for Ordinal Data.
     \emph{Journal of the Royal Statistical Society. Series B
     (Methodological)}, 42, pp. 109-142.
 
-Tutz, G and Gertheiss, J (2016). Regularized Regression
+Tutz, G. and Gertheiss, J. (2016). Regularized Regression
     for Categorical Data (With Discussion and Rejoinder).
     \emph{Statistical Modelling}, 16, pp. 161-260.
+    https://doi.org/10.1177/1471082X16642560
+
+Ugba, E. R., Mörlein, D. and Gertheiss, J. (2021). Smoothing in Ordinal
+    Regression: An Application to Sensory Data. \emph{Stats}, 4, 616–633.
+    https://doi.org/10.3390/stats4030037
 }
 \seealso{
 \code{\link{anova.serp}}, \code{\link{summary.serp}},

@@ -2,7 +2,7 @@
 
 serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
                     Terms, lambda, lambdaGrid, gridType, tuneMethod,
-                    globalEff, cvMetric, mslope, linkf, nL, obs,
+                    globalEff, cvMetric, mslope, nL, obs,
                     vnull, nvar, m)
 {
   if (slope == 'penalize' && !is.null(globalEff))
@@ -10,20 +10,37 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
   if (slope == 'partial'){
     if (!is.null(globalEff)) {
       if(class(globalEff) != "formula")
-        stop("no object of class formula used in globalEff")
+        stop("no object of class formula used in globalEff", call. = FALSE)
       if (grepl('["]', c(globalEff)))
-        stop("variable name(s) in quotes not allowed in globalEff")
+        stop("variable name(s) in quotes not allowed in globalEff",
+             call. = FALSE)
       globalEff <- as.character(all.vars(globalEff))
       if (length(globalEff) == 0L)
-        stop("wrong input(s) in 'globalEff'")
+        stop("wrong input(s) in 'globalEff'", call. = FALSE)
       if (!length(union(colnames(m), globalEff)) == length(colnames(m)))
-        stop("unknown variable(s) in globalEff")
+        stop("unknown variable(s) in globalEff", call. = FALSE)
       if (ncol(x) <= 2L || (ncol(x)-1) == length(globalEff))
         slope <- "parallel"
       if (all.vars(Terms)[[1L]] %in% globalEff)
-        stop("response not allowed in 'globalEff'")
-    } else stop("'globalEff' is unspecified")
+        stop("response not allowed in 'globalEff'", call. = FALSE)
+    } else stop("'globalEff' is unspecified", call. = FALSE)
   }
+  link_reversed <- FALSE
+  initial_link <- link
+
+  if (link == "cloglog" & reverse == TRUE){
+    link_reversed <- TRUE
+    link <- "loglog"
+    initial_link <- "cloglog"
+  }
+  if(initial_link == "loglog"){
+    if (link == "loglog" & reverse == TRUE){
+      link_reversed <- TRUE
+      link <- "cloglog"
+      initial_link <- "loglog"
+    }
+  }
+  linkf <- lnkfun(link)
   xlst <- formxL(x, nL, slope, globalEff, m, vnull)
   yFreq <- colSums(yMtx)/obs
   xMat <- do.call(rbind, xlst)
@@ -91,7 +108,7 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
                      cvMetric, mslope, tuneMethod, Terms, xlst = xlst,
                      yMtx = yMtx, obs)), silent = TRUE)
             if (inherits(ml, "try-error"))
-              stop("numeric problem, cannot proceed with cv tuning")
+              stop("cv tuning did not succeed, try switching to a different tuneMethod")
             hh <- cbind(lambdaGrid, ml)
             hh <- as.numeric(hh[which.min(hh[,2L]), ])
             minL <- list(minimum = hh[1L], objective = hh[2L])
@@ -104,7 +121,8 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
                        link, m, slope, globalEff, nvar, reverse, vnull,
                        control, wt, cvMetric, mslope, tuneMethod,
                        Terms, xlst = xlst, yMtx = yMtx, obs)), silent = TRUE)
-            if (inherits(minL, "try-error")) stop("bad input in cv function")
+            if (inherits(minL, "try-error"))
+              stop("cv tuning did not succeed, try switching to a different tuneMethod")
             lam <- minL$minimum
           })
         ans$nrFold <- nrFold
@@ -143,44 +161,38 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
   misc <- list(colnames.x = colnames.x, colnames.xMat = nmsv, npar = npar,
                variable.null = vnull, convg.no = res$conv,  no.var = nvar)
   delta <- res$coef
-  fv <- res$exact.pr
-  if (reverse) {
-    reverse.par <- reverse.fun(delta, slope, globalEff,
-                               m, mslope, fv, nL, Terms, misc)
-    delta <- reverse.par[[1L]]
-    fv <- reverse.par[[2L]]
-  }
-  fv <- as.data.frame(fv)
+  if (reverse) delta <- -1L * delta
+  fv <- as.data.frame(res$exact.pr)
   colnames(fv) <- levels(y)
+  nfinite <- "non-finite log-likelihood persists, "
   if (!is.null(globalEff)) ans$globalEff <- globalEff
   if (slope == "penalize"){
     if (is.na(res$loglik)){
       if (tuneMethod=="user")
-        warning("non-finite log-likelihood persists, ",
-                "try larger values of lambda.")
+        warning(nfinite,"apply a stronger lambda value or a different ",
+                "tuning method")
       if (tuneMethod=="deviance" || tuneMethod=="cv"){
         if (!is.null(lambdaGrid))
-          warning("non-finite log-likelihood persists, ",
-                  "try increasing lambdaGrid upper limit.")
+          warning(nfinite,"increase lambdaGrid upper limit or apply a ",
+                  "different tuning method")
         else
-          warning("non-finite log-likelihood persists, ",
-                  "try other tuning methods.")
+          warning(nfinite,"try a different tuning method.")
       }
     }
     if (tuneMethod == "deviance" || tuneMethod == "cv"){
       if (tuneMethod == "cv"){
-        ans$testError <- minL$objective
-        ans$trainError <- errorMetrics(y, fv, type = cvMetric)
+        ans$testError <- if (is.na(res$loglik)) NA else minL$objective
       } else ans$value <- as.numeric(minL$objective)
-      if (gridType == "discrete") {
+      if (gridType == "discrete"){
         misc$gridType <- gridType
-        misc$grid.range <- c(0L, control$maxpen)
+        misc$grid.range <- if(!is.null(lambdaGrid))
+          c(0L, max(lambdaGrid)) else c(0L, control$maxpen)
       } else {
-        misc$grid.range <- range(lambdaGrid)
+        misc$grid.range <- c(0L, control$maxpen)
         ans$gridType <- gridType
       }
     }
-    ans$lambda <- lam
+    ans$lambda <- if (is.na(res$loglik)) NA else lam
     if (tuneMethod == "finite") ans$value <- res$loglik
   }
   if (!vnull){
@@ -197,6 +209,7 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
     dimnames(hes) <- list(new.name, new.name)
     names(gra) <- new.name
   }
+  if (link_reversed) link <- initial_link
   delta <- as.numeric(delta)
   sl <- if (partial.names) "partial" else slope
   delta <- est.names(delta, slope = sl, globalEff, colnames.x, x, m,
@@ -293,6 +306,9 @@ serp.fit <- function(lambda, x, y, wt, startval, xlst,
     }
     converged <- abs.conv
     half.iter <- 0L
+    delta.old <- delta
+    obj.old <- obj
+    fvalues.old <- fvalues
     while (obj < objOld && (conv == 2L)) {
       delta <- (delta + deltaOld) * 0.5
       fvalues <- prlg(delta, xMat, obs, yMtx, penx, linkf, control, wt)
@@ -309,11 +325,11 @@ serp.fit <- function(lambda, x, y, wt, startval, xlst,
         break
       }
     }
-    if(conv == 3L) break
-    Improved <- objOld <= obj
-    if (!Improved) {
-      delta <- deltaOld
-      loglik <- objOld
+    NotImproved <- objOld <= obj
+    if (NotImproved) {
+      delta <- delta.old
+      loglik <- obj.old
+      fvalues <- fvalues.old
     }
   }
   if (maxits > 1L && iter >= maxits){

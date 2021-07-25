@@ -147,16 +147,22 @@
 #' enables the smoothing of response categories such that all
 #' category-specific effects associated with the response turn towards a
 #' common global effect. SERP could also be applied to a semi-parallel model
-#' with only the category-specific part of the model penalized.
+#' with only the category-specific part of the model penalized. See,
+#' Ugba et al. (2021) for a detailed discussion on SERP.
 #'
 #' @references
-#' McCullagh, P (1980). Regression Models for Ordinal Data.
+#' McCullagh, P. (1980). Regression Models for Ordinal Data.
 #'     \emph{Journal of the Royal Statistical Society. Series B
 #'     (Methodological)}, 42, pp. 109-142.
 #'
-#' Tutz, G and Gertheiss, J (2016). Regularized Regression
+#' Tutz, G. and Gertheiss, J. (2016). Regularized Regression
 #'     for Categorical Data (With Discussion and Rejoinder).
 #'     \emph{Statistical Modelling}, 16, pp. 161-260.
+#'     https://doi.org/10.1177/1471082X16642560
+#'
+#' Ugba, E. R., Mörlein, D. and Gertheiss, J. (2021). Smoothing in Ordinal
+#'     Regression: An Application to Sensory Data. \emph{Stats}, 4, 616–633.
+#'     https://doi.org/10.3390/stats4030037
 #'
 #' @return An object of class \code{serp} with the components listed below,
 #' depending on the type of slope modeled. Other summary methods include:
@@ -201,8 +207,6 @@
 #'   \item{Terms}{the terms structure describing the model.}
 #'   \item{testError}{numeric value of the cross-validated test error at which
 #'         the optimal tuning parameter emerged.}
-#'   \item{trainError}{numeric value of the cross-validated training error of
-#'         the final model.}
 #'   \item{tuneMethod}{a character vector specifying the method for choosing an
 #'         optimal shrinkage parameter.}
 #'   \item{value}{numeric value of the deviance or the minus log-likelihood of
@@ -225,7 +229,6 @@
 #'            lambdaGrid = 10^seq(1, -1, length.out=5), data = wine)
 #' coef(f2)
 #' predict(f2, type = "class")
-#' anova(f1, f2)
 #'
 #' ## The unpenalized proportional odds model (with constrained estimates).
 #' f3 <-  serp(rating ~ temp + contact, slope = "parallel",
@@ -292,7 +295,7 @@ serp <- function(
       stop("negative weights not allowed")
     if (slope == "penalize" && tuneMethod == 'cv' &&
         weight.type != "frequency")
-      stop("frequency weights only is allowed for 'cv' tuning")
+      stop("only frequency weights are allowed in 'cv' tuning.")
     if (weight.type == "frequency"){
       if(any(round(weights) != weights))
         stop("frequency weights must be whole numbers")
@@ -307,7 +310,6 @@ serp <- function(
     }
   } else wt <- rep(1L, obs)
   y <- droplevels(y)
-  #if (!is.factor(y)) stop("response must be a factor")
   nL <- length(levels(y))
   if (nL <= 2L) stop("response must have 3 or more levels")
   x <- model.matrix(Terms, m, contrasts)
@@ -328,11 +330,9 @@ serp <- function(
   nvar <- ifelse(!vnull, dim(x)[2L] - 1L, dim(x)[2L])
   if (obs != dim(x)[1L]) stop("variable lengths unequal")
   yMtx <- yMx(y, obs, nL)
-  if (reverse) yMtx <- yMtx[, nL:1L]
-  linkf <- lnkfun(link)
   ans <- serpfit(x, y, wt, yMtx, link, slope, reverse, control,
                  Terms, lambda, lambdaGrid, gridType, tuneMethod,
-                 globalEff, cvMetric, mslope, linkf, nL, obs,
+                 globalEff, cvMetric, mslope, nL, obs,
                  vnull, nvar, m)
   ans <- c(list(call = mc), ans)
   ans$na.action <- attr(m, "na.action")
@@ -340,4 +340,3 @@ serp <- function(
   class(ans) <- function.name
   ans
 }
-
