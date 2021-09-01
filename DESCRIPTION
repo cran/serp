@@ -1,9 +1,13 @@
 Type: Package
 Package: serp
 Title: Smooth Effects on Response Penalty for 'CLM'
-Version: 0.2.0
-Author: Ejike R. Ugba [aut, cre, cph]
-Maintainer: Ejike R. Ugba <ejike.ugba@outlook.com>
+Version: 0.2.1
+Authors@R: 
+    person(given = "Ejike R.",
+           family = "Ugba",
+           role = c("aut", "cre", "cph"),
+           email = "ejike.ugba@outlook.com",
+           comment = c(ORCID = "0000-0003-2572-0023"))
 Description: A regularization method for the cumulative link
     models.  The 'smooth-effect-on-response penalty' ('SERP') provides
     flexible modelling of the ordinal model by enabling the smooth
@@ -30,6 +34,8 @@ Encoding: UTF-8
 LazyData: True
 RoxygenNote: 7.1.1
 NeedsCompilation: no
-Packaged: 2021-07-24 00:10:05 UTC; EJIKE
+Packaged: 2021-09-01 09:05:28 UTC; EJIKE
+Author: Ejike R. Ugba [aut, cre, cph] (<https://orcid.org/0000-0003-2572-0023>)
+Maintainer: Ejike R. Ugba <ejike.ugba@outlook.com>
 Repository: CRAN
-Date/Publication: 2021-07-25 13:40:02 UTC
+Date/Publication: 2021-09-01 22:10:02 UTC

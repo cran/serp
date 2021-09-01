@@ -10,17 +10,16 @@ test_that("estreem shrinkage with serp results to the
            model (NPOM)",
           {
             tol <- 1e-06
-            subs <- c(1:30)
             #1# From NPOM to POM
             sp1 <- serp(rating ~ temp + contact, link = "logit",
                         slope = "penalize", tuneMethod = "user",
-                        lambda = 1e10, reverse=FALSE, data=wine,
-                        subset = subs)
+                        lambda = 1e07, reverse=FALSE, data=wine,
+                        subset = c(1:30))
             cof1 <- round(as.numeric(coef(sp1))[1L], 4L)
 
             sp2 <- serp(rating ~ temp + contact, link = "logit",
                         slope = "parallel", reverse=FALSE, data = wine,
-                        subset = subs)
+                        subset = c(1:30))
             cof2 <- round(as.numeric(coef(sp2))[1L], 4L)
             expect_equal(cof1, cof2, check.attributes=FALSE,
                          tolerance=tol)
@@ -29,7 +28,7 @@ test_that("estreem shrinkage with serp results to the
                         slope = "penalize", tuneMethod = "cv",
                         lambdaGrid = 10^seq(-1, 2, length.out=2),
                         gridType = "fine", reverse=TRUE, data=wine,
-                        subset = subs)
+                        subset = c(1:30))
 
             sp4 <- serp(rating ~ temp + contact, link = "logit",
                         slope = "penalize", tuneMethod = "finite",
@@ -42,9 +41,9 @@ test_that("estreem shrinkage with serp results to the
             expect_vector(summary(sp3)$penalty$lambda)
             expect_null(summary(sp2)$penalty)
 
-            rm(sp1, sp2, cof1, cof2, subs)
+            rm(sp1, sp2, cof1, cof2)
 
-            #2# partial slope with all variables in glodalEff yields  POM
+            #2# partial slope with all variables in globalEff yields  POM
             sp1 <- serp(rating ~ temp + contact, link = "logit",
                         slope = "partial", reverse=FALSE, subset = c(1:50),
                         globalEff = ~ temp + contact, data=wine)
@@ -92,7 +91,7 @@ test_that("lambda is a single numeric and non-negative value and
             expect_error(
               serp(rating ~ temp + contact, link = "probit",
                    slope = "penalize", reverse = FALSE,
-                   tuneMethod = "deviance",
+                   tuneMethod = "aic",
                    lambdaGrid = c(-3,4),
                    data = wine, subset = subs),
               "lambdaGrid must be a non-negative numeric vector of length > 1")
@@ -100,7 +99,7 @@ test_that("lambda is a single numeric and non-negative value and
             expect_vector(
               serp(rating ~ temp + contact, link = "cloglog",
                    slope = "penalize", reverse = FALSE,
-                   tuneMethod = "deviance",
+                   tuneMethod = "aic",
                    lambdaGrid = c(0,10),
                    data = wine, subset = subs)$lambda)
 
@@ -207,7 +206,7 @@ test_that("error messages and warnings report properly",
                    reverse = F,
                    lambdaGrid = 10^seq(-1, 2, length.out=2),
                    data = test_data1),
-              "cv tuning did not succeed, try switching to a different tuneMethod")
+              "cv tuning did not succeed, try using a different tuneMethod")
 
             expect_error(print.serp(test_data1),
                          "input must be an object of class 'serp'")
@@ -260,7 +259,7 @@ test_that("error messages and warnings report properly",
                    lambda = 0.09,
                    lambdaGrid = 10^seq(-1, 2, length.out=2),
                    data = test_data3),
-              "cv tuning did not succeed, try switching to a different tuneMethod")
+              "cv tuning did not succeed, try using a different tuneMethod")
 
             set.seed(1)
             n <- 20

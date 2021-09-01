@@ -1,4 +1,4 @@
-#' Bitterness of wine
+#' Bitterness of wine dataset
 #'
 #' The \code{wine} dataset adopted from Randall(1989),
 #' represents the outcome of a factorial experiment on factors
@@ -7,7 +7,7 @@
 #' with the rating of wine taken on a continuous scale in the interval
 #' from 0 (none) to 100 (intense). These were subsequently grouped
 #' into five ordered categories ranging from 1 = 'least bitter'
-#' to 5 = 'most bitter' Altogether, nine different judges assessed
+#' to 5 = 'most bitter'. Altogether, nine different judges assessed
 #' wine from two bottles and out of the four treatment conditions,
 #' making a total of 72 observations.
 #' @docType data

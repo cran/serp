@@ -1,5 +1,29 @@
+# serp 0.2.1
+- submission to CRAN
+
+---
+# serp 0.2.0.9001
+- update function included in namespace
+- examples included in the different function documentation
+- shrinkage parameter upper limit set to 1e10 in serp.control
+- bug fix in test function
+
+---
+# serp 0.2.0.9000 
+- deviance tuning option in serp tuneMethod now replaced by AIC 
+- serp output includes residual degrees of freedom (rdf)
+- function to compute the effective degrees of freedom and rdf from the trace of the generalized hat matrix provided
+- serp.summary documentation has its value segment edited
+- changes made in serp test functions
+- changes made in README.Rmd and README.md
+
+---
 # serp 0.2.0
-- resubmission to CRAN
+- serp version 0.2.0 release
+
+---
+# serp 0.1.9.9001
+- re-submission to CRAN
 
 ---
 # serp 0.1.9.9000
