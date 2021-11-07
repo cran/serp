@@ -20,7 +20,7 @@ Provides the Variance covariance matrix of an object of class \code{serp}.
 \examples{
 library(serp)
 m <- serp(rating ~ temp + contact, slope = "parallel", link = "logit",
-           data = wine)
+           data = serp::wine)
 vcov(m)
 
 }

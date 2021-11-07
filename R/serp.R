@@ -150,77 +150,81 @@
 #' category-specific effects associated with the response turn towards a
 #' common global effect. SERP could also be applied to a semi-parallel model
 #' with only the category-specific part of the model penalized. See,
-#' Ugba et al. (2021) for a discussion and an application of SERP in an
-#' empirical study.
+#' Ugba (2021), Ugba et al. (2021) for further details and application in
+#' empirical studies.
 #'
 #' @references
-#' McCullagh, P. (1980). Regression Models for Ordinal Data.
-#'     \emph{Journal of the Royal Statistical Society. Series B
-#'     (Methodological)}, 42, pp. 109-142.
+#' Ugba, E. R. (2021). serp: An R package for smoothing in ordinal regression
+#'     \emph{Journal of Open Source Software}, 6(66), 3705.
+#'     https://doi.org/10.21105/joss.03705
+#'
+#' Ugba, E. R., Mörlein, D. and Gertheiss, J. (2021). Smoothing in Ordinal
+#'     Regression: An Application to Sensory Data. \emph{Stats}, 4, 616–633.
+#'     https://doi.org/10.3390/stats4030037
 #'
 #' Tutz, G. and Gertheiss, J. (2016). Regularized Regression
 #'     for Categorical Data (With Discussion and Rejoinder).
 #'     \emph{Statistical Modelling}, 16, pp. 161-260.
 #'     https://doi.org/10.1177/1471082X16642560
 #'
-#' Ugba, E. R., Mörlein, D. and Gertheiss, J. (2021). Smoothing in Ordinal
-#'     Regression: An Application to Sensory Data. \emph{Stats}, 4, 616–633.
-#'     https://doi.org/10.3390/stats4030037
+#' McCullagh, P. (1980). Regression Models for Ordinal Data.
+#'     \emph{Journal of the Royal Statistical Society. Series B
+#'     (Methodological)}, 42, pp. 109-142.
+#'     https://doi.org/10.1111/j.2517-6161.1980.tb01109.x
 #'
-#' @return An object of class \code{serp} with the components listed below,
+#' @details An object of class \code{serp} with the components listed below,
 #' depending on the type of slope modeled. Other summary methods include:
 #'  \code{summary}, \code{coef}, \code{predict}, \code{vcov},
 #' \code{anova}, \code{errorMetrics}, etc.
 #'
-#' \describe{
-#'   \item{aic}{the akaike information criterion, with effective degrees of
+#' @return \item{aic}{the akaike information criterion, with effective degrees of
 #'         freedom obtained from the trace of the generalized hat matrix
 #'         depending on the tuning parameter.}
-#'   \item{bic}{the bayesian information criterion, with effective degrees of
+#' @return \item{bic}{the bayesian information criterion, with effective degrees of
 #'         freedom obtained from the trace of the generalized hat matrix
 #'         depending on the tuning parameter.}
-#'   \item{call}{the matched call.}
-#'   \item{coef}{a vector of coefficients of the fitted model.}
-#'   \item{converged}{a character vector of fit convergence status.}
-#'   \item{contrasts}{(where relevant) the contrasts used in the model.}
-#'   \item{control}{list of control parameters from \code{serp.control}.}
-#'   \item{cvMetric}{the performance metric used for cv tuning.}
-#'   \item{deviance}{the residual deviance.}
-#'   \item{edf}{the (effective) number of degrees of freedom used by the model}
-#'   \item{fitted.values}{the fitted probabilities.}
-#'   \item{globalEff}{variable(s) in model treated as global effect(s)}
-#'   \item{gradient}{a column vector of gradients for the coefficients at the
+#' @return \item{call}{the matched call.}
+#' @return \item{coef}{a vector of coefficients of the fitted model.}
+#' @return \item{converged}{a character vector of fit convergence status.}
+#' @return \item{contrasts}{(where relevant) the contrasts used in the model.}
+#' @return \item{control}{list of control parameters from \code{serp.control}.}
+#' @return \item{cvMetric}{the performance metric used for cv tuning.}
+#' @return \item{deviance}{the residual deviance.}
+#' @return \item{edf}{the (effective) number of degrees of freedom used by the model}
+#' @return \item{fitted.values}{the fitted probabilities.}
+#' @return \item{globalEff}{variable(s) in model treated as global effect(s)}
+#' @return \item{gradient}{a column vector of gradients for the coefficients at the
 #'         model convergence.}
-#'   \item{Hessian}{the hessian matrix for the coefficients at the model
+#' @return \item{Hessian}{the hessian matrix for the coefficients at the model
 #'         convergence.}
-#'   \item{iter}{number of interactions before convergence or non-convergence.}
-#'   \item{lambda}{a user-supplied single numeric value for the \code{user}
+#' @return \item{iter}{number of interactions before convergence or non-convergence.}
+#' @return \item{lambda}{a user-supplied single numeric value for the \code{user}
 #'         tuning tuning method.}
-#'   \item{lambdaGrid}{a numeric vector of lambda values used to determine the
+#' @return \item{lambdaGrid}{a numeric vector of lambda values used to determine the
 #'         optimum tuning parameter.}
-#'   \item{logLik}{the realized log-likelihood at the model convergence.}
-#'   \item{link}{character vector indicating the link function of the fit.}
-#'   \item{message}{character vector stating the type of convergence obtained}
-#'   \item{misc}{a list to hold miscellaneous fit information.}
-#'   \item{model}{model.frame having variables from formula.}
-#'   \item{na.action}{(where relevant) information on the treatment of NAs.}
-#'   \item{nobs}{the number of observations.}
-#'   \item{nrFold}{the number of k-fold cross validation for the cv tuning
+#' @return \item{logLik}{the realized log-likelihood at the model convergence.}
+#' @return \item{link}{character vector indicating the link function of the fit.}
+#' @return \item{message}{character vector stating the type of convergence obtained}
+#' @return \item{misc}{a list to hold miscellaneous fit information.}
+#' @return \item{model}{model.frame having variables from formula.}
+#' @return \item{na.action}{(where relevant) information on the treatment of NAs.}
+#' @return \item{nobs}{the number of observations.}
+#' @return \item{nrFold}{the number of k-fold cross validation for the cv tuning
 #'         method. Default to k = 5.}
-#'   \item{rdf}{the residual degrees of freedom}
-#'   \item{reverse}{a logical vector indicating the the direction of the
+#' @return \item{rdf}{the residual degrees of freedom}
+#' @return \item{reverse}{a logical vector indicating the the direction of the
 #'         cumulative probabilities. Default to P(Y<=r).}
-#'   \item{slope}{a character vector indicating the type of slope parameters
+#' @return \item{slope}{a character vector indicating the type of slope parameters
 #'         fitted. Default to \code{penalize}.}
-#'   \item{Terms}{the terms structure describing the model.}
-#'   \item{testError}{numeric value of the cross-validated test error at which
+#' @return \item{Terms}{the terms structure describing the model.}
+#' @return \item{testError}{numeric value of the cross-validated test error at which
 #'         the optimal tuning parameter emerged.}
-#'   \item{tuneMethod}{a character vector specifying the method for choosing an
+#' @return \item{tuneMethod}{a character vector specifying the method for choosing an
 #'         optimal shrinkage parameter.}
-#'   \item{value}{numeric value of AIC or logLik obtained at the optimal tuning
+#' @return \item{value}{numeric value of AIC or logLik obtained at the optimal tuning
 #'         parameter when using \code{aic} or \code{finite} tuning methods respectively.}
-#'   \item{ylev}{the number of the response levels.}
-#' }
+#' @return \item{ylev}{the number of the response levels.}
+#'
 #' @export
 #' @examples
 #' require(serp)
@@ -336,14 +340,9 @@ serp <- function(
     tuneMethod <- "user"
     lambda <- 0L
   } else vnull <- FALSE
-  if (is.null(dim(x))){
-    x <- cbind(x)
-    colnames(x) <- colnames(m)[-1L]
-  }
   cons <- attr(x, "contrasts")
   mslope <- slope
   nvar <- ifelse(!vnull, dim(x)[2L] - 1L, dim(x)[2L])
-  if (obs != dim(x)[1L]) stop("variable lengths unequal")
   yMtx <- yMx(y, obs, nL)
   ans <- serpfit(x, y, wt, yMtx, link, slope, reverse, control,
                  Terms, lambda, lambdaGrid, gridType, tuneMethod,

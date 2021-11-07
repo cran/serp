@@ -14,6 +14,7 @@
 #'              nrFold = 5e0,
 #'              cv.seed = 1e01,
 #'              grid.length = 5e01,
+#'              misclass.thresh = 5e-01,
 #'              minP = .Machine$double.eps,
 #'              ...)
 #' @param maxits the maximum number of Newton's iterations. Default to 100.
@@ -37,6 +38,8 @@
 #'   tuning.
 #' @param grid.length the length of the discrete lambda grid for the penalty
 #'   method.
+#' @param misclass.thresh to reset the classification threshold in
+#'   \code{errorMetrics} when \code{type} is 'misclass'.
 #' @param minP A near zero minimum value the fitted probabilities are allowed
 #'   to get during iteration to prevent numerical instability .
 #' @param ... additional arguments.
@@ -61,6 +64,7 @@ serp.control <- function(
   nrFold = 5e0,
   cv.seed = 1e01,
   grid.length = 5e01,
+  misclass.thresh = 5e-01,
   minP = .Machine$double.eps, ...)
 {
   cntr <- c(maxits, eps, maxpen, minP, maxAdjIter, trace,
@@ -71,6 +75,9 @@ serp.control <- function(
   if(!(is.numeric(nrFold)) || (nrFold < 2L) || (nrFold > 10L))
     stop("nrFold should be numeric and between 2 and 10 inclusive.",
          call. = FALSE)
+  if(!is.numeric(misclass.thresh) || misclass.thresh < 0 || misclass.thresh > 1)
+    stop("misclass.thresh should be numeric and lie between 0 and 1 inclusive",
+         call. = FALSE)
   lambda.upper.limit <- 1e10
   if (maxpen > lambda.upper.limit)
     stop("values of lambda above 1e10 are not allowed", call. = FALSE)
@@ -79,15 +86,12 @@ serp.control <- function(
   int.lambdaGrid <- c(10^seq((log(maxpen)/log(10)), -2, length.out=grid.length), 0)
   msg <- structure(list(
     "0" = "Absolute and relative convergence criteria satisfied",
-    "1" = "Absolute convergence criterion satisfied, but relative, criterion
-    was not satisfied",
+    "1" = "Absolute convergence criterion satisfied, but relative criterion was not satisfied",
     "2" = "Maximum iteration limit reached",
     "3" = "Maximum number of step-half iteration limit reached",
     "4" = "Maximum number of Newton adjustments reached",
     "5" = "Iteration process abruptly ended",
-    "s" = "  Stochastic ordering assumption failed.
-    Consider using the penalized, parallel or partial slope,
-    or other link functions."
+    "s" = "  Stochastic ordering assumption failed. Consider using the penalized, parallel or partial slope, or other link functions."
   ))
   list(maxits = as.integer(maxits), eps = eps, minP = minP,
        maxpen = maxpen, maxAdjIter = as.integer(maxAdjIter),
@@ -96,5 +100,6 @@ serp.control <- function(
        trace = as.integer(trace), cv.seed = cv.seed,
        grid.length = grid.length, relTol = relTol,
        int.lambdaGrid = int.lambdaGrid,
-       lambda.upper.limit = lambda.upper.limit)
+       lambda.upper.limit = lambda.upper.limit,
+       misclass.thresh = misclass.thresh)
 }

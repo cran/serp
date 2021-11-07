@@ -12,13 +12,13 @@ serpfit <- function(x, y, wt, yMtx, link, slope, reverse, control,
       if(class(globalEff) != "formula")
         stop("no object of class formula used in globalEff", call. = FALSE)
       if (grepl('["]', c(globalEff)))
-        stop("variable name(s) in quotes not allowed in globalEff",
+        stop("variable name in quotes not allowed in globalEff",
              call. = FALSE)
       globalEff <- as.character(all.vars(globalEff))
       if (length(globalEff) == 0L)
-        stop("wrong input(s) in 'globalEff'", call. = FALSE)
+        stop("wrong input in 'globalEff'", call. = FALSE)
       if (!length(union(colnames(m), globalEff)) == length(colnames(m)))
-        stop("unknown variable(s) in globalEff", call. = FALSE)
+        stop("unknown variable in globalEff", call. = FALSE)
       if (ncol(x) <= 2L || (ncol(x)-1) == length(globalEff))
         slope <- "parallel"
       if (all.vars(Terms)[[1L]] %in% globalEff)
@@ -343,10 +343,10 @@ serp.fit <- function(lambda, x, y, wt, startval, xlst,
     warning(control$msg[as.character("s")])
   msg <- control$msg[as.character(conv)][[1L]]
   if(conv <= 1L && control$trace > 0L && xtrace) {
-    cat("\n\nSuccessful convergence! ", msg, fill = TRUE)
+    message("\nSuccessful convergence!\n", msg)
   }
   if(conv > 1 && control$trace > 0L && xtrace) {
-    cat("\n\n Optimization failed!\n", msg, fill = TRUE)
+    message("\nOptimization failed!\n", msg)
   }
   df <- df.serp(fvalues, xMat, penx, nL)
   res <- c(list(coef = delta, loglik = loglik, info = info, score = score,

@@ -13,31 +13,30 @@
 #' @docType data
 #' @usage wine
 #' @format A data frame with 72 rows and 6 variables:
-#'  \describe{
-#'  \item{\code{response}}{
+#' @return \item{\code{response}}{
 #'    scorings of wine bitterness on a 0---100 continuous scale.
 #'  }
-#'  \item{\code{rating}}{
+#' @return \item{\code{rating}}{
 #'    ordered factor with 5 levels; a grouped version of \code{response}.
 #'  }
-#'  \item{\code{contact}}{
+#' @return \item{\code{contact}}{
 #'    factor with two levels (\code{"no"} and \code{"yes"}).
 #'  }
-#'  \item{\code{temp}}{
+#' @return \item{\code{temp}}{
 #'    temperature: factor with two levels.
 #'  }
-#'  \item{\code{judge}}{
+#' @return \item{\code{judge}}{
 #'    factor with nine levels.
 #'  }
-#'  \item{\code{bottle}}{
+#' @return \item{\code{bottle}}{
 #'    factor with eight levels.
 #'  }
-#'}
 #' @keywords dataset
 #' @source Taken from Randall (1989).
 #' @references
 #' Randall, J (1989). The analysis of sensory data by generalized linear
-#'     model. \emph{Biometrical journal 7}, pp. 781--793.
+#'     model. \emph{Biometrical Journal}, 31, 781--793.
+#'     https://doi.org/10.1002/bimj.4710310703
 #'
 #' @examples
 #'

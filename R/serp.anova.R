@@ -6,19 +6,17 @@
 #' @param object An object of class \code{serp}.
 #' @param ... additional arguments.
 #' @param test type of test to be conducted.
-#' @return An ANOVA table with the following components on display:
-#' \describe{
-#'   \item{model}{the respective model aliases.}
-#'   \item{slope}{type of slope fitted, which may be any of, unparallel, parallel,
+#' @details An ANOVA table with the following components on display:
+#' @return \item{model}{the respective model aliases.}
+#' @return \item{slope}{type of slope fitted, which may be any of, unparallel, parallel,
 #'         or partial slope.}
-#'   \item{no.par}{the no of parameters in the model.}
-#'   \item{AIC}{the akaike information criterion.}
-#'   \item{logLik}{the realized log-likelihood.}
-#'   \item{Test}{the different pair(s) of test(s) conducted.}
-#'   \item{LR.stat}{the computed Likelihood ratio statistic.}
-#'   \item{df}{the degree of freedom.}
-#'   \item{Pr(chi)}{the p-value of test statitic.}
-#' }
+#' @return \item{no.par}{the no of parameters in the model.}
+#' @return \item{AIC}{the akaike information criterion.}
+#' @return \item{logLik}{the realized log-likelihood.}
+#' @return \item{Test}{the different pair(s) of test(s) conducted.}
+#' @return \item{LR.stat}{the computed Likelihood ratio statistic.}
+#' @return \item{df}{the degree of freedom.}
+#' @return \item{Pr(chi)}{the p-value of test statitic.}
 #'
 #' @seealso
 #' \code{\link{serp}}, \code{\link{confint.serp}}, \code{\link{vcov.serp}},
@@ -32,8 +30,6 @@
 #' anova(m1, m2)
 #'
 #' @export
-#'
-#'
 #'
 anova.serp <- function (object, ..., test = c("Chisq", "none"))
 {
@@ -50,20 +46,18 @@ anova.serp <- function (object, ..., test = c("Chisq", "none"))
          call. = FALSE)
   mlist <- list(object, ...)
   mclass <- all(unlist(lapply(mlist, class)) == "serp")
-  if (!mclass) stop("object(s) of class other than serp not supported",
+  if (!mclass) stop("object of class other than serp not supported",
                     call. = FALSE)
   ml <- length(mlist)
   dr <- vapply(mlist, function(r) (r$nobs - length(r$coef)), numeric(1))
   slope.type <- vapply(mlist, function(r) (r$slope), character(1))
   if (any(slope.type=="penalize"))
-    stop("available anova-test doesn't support model(s) with penalized slope",
+    stop("test not available for model with penalized slope",
          call. = FALSE)
   hh <- order(dr, decreasing = TRUE)
   mlist <- mlist[hh]
   nm <- nm[hh]
-  if (any(!vapply(mlist, inherits, logical(1), "serp")))
-    stop("input must be an object(s) of class 'serp'", call. = FALSE)
-  fv <- vapply(mlist, function(r) length(r$fitted.values), numeric(1))
+  fv <- vapply(mlist, function(r) length(as.matrix(r$fitted.values)), numeric(1))
   if (any(fv != fv[1L]))
     stop("models were not all fitted to the same ",
          "size of dataset", call. = FALSE)
@@ -84,6 +78,6 @@ anova.serp <- function (object, ..., test = c("Chisq", "none"))
                   "Test", "LR.stat", "df", "Pr(Chi)")
   if (test == "none") res <- res[, -9L]
   class(res) <- c("Anova", "data.frame")
-  attr(res, "heading") <- "Likelihood ratio tests of ordinal models:\n"
+  attr(res, "heading") <- crayon::green("Likelihood ratio tests of ordinal models:\n")
   res
 }
