@@ -105,7 +105,7 @@
 #' @importFrom stats update
 #' @seealso \code{\link{anova.serp}}, \code{\link{summary.serp}},
 #' \code{\link{predict.serp}}, \code{\link{confint.serp}},
-#' \code{\link{vcov.serp}}, \code{\link{errorMetrics}}
+#' \code{\link{vcov.serp}}
 #' @details
 #' The \code{serp} function fits the cumulative link model (CLM)
 #' with smooth-effect-on-response penalty (SERP). The cumulative
@@ -175,7 +175,7 @@
 #' @details An object of class \code{serp} with the components listed below,
 #' depending on the type of slope modeled. Other summary methods include:
 #'  \code{summary}, \code{coef}, \code{predict}, \code{vcov},
-#' \code{anova}, \code{errorMetrics}, etc.
+#' \code{anova}, etc.
 #'
 #' @return \item{aic}{the akaike information criterion, with effective degrees of
 #'         freedom obtained from the trace of the generalized hat matrix
@@ -228,6 +228,7 @@
 #' @export
 #' @examples
 #' require(serp)
+#'
 #' ## The unpenalized non-proportional odds model returns unbounded estimates, hence,
 #' ## not fully identifiable.
 #' f1 <- serp(rating ~ temp + contact, slope = "unparallel",
@@ -242,7 +243,7 @@
 #'            lambda = 1e1, data = wine)
 #' coef(f2)
 #'
-#' ## A penalized partial proportional odds model with one variable set to
+#' ## A penalized partial proportional odds model with some variables set to
 #' ## global effect is also possible.
 #' f3 <- serp(rating ~ temp + contact, slope = "penalize",
 #'            reverse = TRUE, link = "logit", tuneMethod = "user",
@@ -250,8 +251,9 @@
 #' coef(f3)
 #'
 #'
-#' ## The unpenalized proportional odds model with constrained estimates. Using a
-#' ## very strong lambda in f2 will result in estimates equal to estimates in f4.
+#' ## The unpenalized proportional odds model having constrained estimates can
+#' ## as well be fit. Under extreme shrinkage, estimates in f2 equal those in
+#' ## this model.
 #' f4 <-  serp(rating ~ temp + contact, slope = "parallel",
 #'             reverse = FALSE, link = "logit", data = wine)
 #' summary(f4)

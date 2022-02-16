@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# serp <img src='man/figures/hex_logo.png' align="right" height="105" />
+# serp <a href="https://ejikeugba.github.io/serp/"><img src='man/figures/hex_logo.png' align="right" height="139" /></a>
 
 <!-- badges: start -->
 
@@ -14,17 +14,18 @@ coverage](https://codecov.io/gh/ejikeugba/serp/branch/master/graph/badge.svg)](h
 Downloads](http://cranlogs.r-pkg.org/badges/grand-total/serp)](https://CRAN.R-project.org/package=serp)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/serp)](https://CRAN.R-project.org/package=serp)
-[![license](https://img.shields.io/badge/license-GPL--2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.en.html)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.03705/status.svg)](https://doi.org/10.21105/joss.03705)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/ejikeugba/serp?branch=master&svg=true)](https://ci.appveyor.com/project/ejikeugba/serp)
+[![license](https://img.shields.io/badge/license-GPL--2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.en.html)
 [![R build
 status](https://github.com/ejikeugba/serp/workflows/R-CMD-check/badge.svg)](https://github.com/ejikeugba/serp/actions)
-[![DOI](https://joss.theoj.org/papers/10.21105/joss.03705/status.svg)](https://doi.org/10.21105/joss.03705)
+
 <!-- badges: end -->
 
-#### Overview
+### Overview
 
-The R package `serp` fits cumulative link models (CLMs) with the
+The `serp` R package fits cumulative link models (CLMs) with the
 `smooth-effect-on-response penalty (SERP)`. The `cumulative model`
 developed by McCullagh (1980) is probably the most frequently used
 ordinal model in empirical studies. However, the stochastic ordering
@@ -43,7 +44,7 @@ methods are also available. See [Ugba,
 2016](https://doi.org/10.1177/1471082X16642560) for further details on
 the implemented penalty.
 
-#### Example
+### Example
 
 Consider the cumulative logit model of the [wine
 dataset](https://ejikeugba.github.io/serp/reference/wine.html), where
@@ -85,18 +86,11 @@ f4 <-  serp(rating ~ temp + contact, slope = "parallel",
 summary(f4)
 ```
 
-#### Installation and Use
-
-##### Dependencies
+### Installation and Use
 
 Before installing `serp`, it is encouraged to have a recent version of
-[R](https://cran.r-project.org/bin/windows/base/) installed. Also expect
-an automatic installation of some few dependencies (e.g. the `ordinal`
-and `stats` R packages) if not already installed.
-
-##### Installation
-
-The released version of `serp` can be installed from
+[R](https://cran.r-project.org/bin/windows/base/) installed. The
+released version of `serp` can be installed from
 [CRAN](https://cran.r-project.org/package=serp) with:
 
 ``` r
@@ -111,15 +105,13 @@ if (!require("devtools")) install.packages("devtools")
 devtools::install_github("ejikeugba/serp")
 ```
 
-##### Loading
-
 Load `serp` into R environment with:
 
 ``` r
 library(serp)
 ```
 
-#### Community Guidelines
+### Community Guidelines
 
 Pull requests are welcomed! Please submit your contributions to `serp`
 through the list of `Pull Requests`, following the [contributing
@@ -128,13 +120,13 @@ report issues and/or seek support, please file a new ticket in the
 [issue](https://github.com/ejikeugba/serp/issues) tracker, and expect a
 feedback ASAP!
 
-#### Code of Conduct
+### Code of Conduct
 
 Please note that `serp` is released with a [Contributor Code of
 Conduct](https://github.com/ejikeugba/serp/blob/master/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.
 
-#### References
+### References
 
 McCullagh, P. (1980). Regression Models for Ordinal Data. *Journal of
 the Royal Statistical Society. Series B (Methodological)*, 42, 109-142.
